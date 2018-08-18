@@ -1,13 +1,17 @@
 package com.glis.io.network;
 
-import com.glis.io.network.client.networktype.Both;
-import com.glis.io.network.client.networktype.Downstream;
-import com.glis.io.network.client.networktype.Upstream;
+import com.glis.DomainController;
+import com.glis.io.network.client.networktype.ClientBoth;
+import com.glis.io.network.client.networktype.ClientDownStream;
+import com.glis.io.network.client.networktype.ClientUpstream;
+import com.glis.io.network.codec.SubscribeMessageEncoder;
 import com.glis.io.network.input.library.MappedMessageLibrary;
 import com.glis.io.network.input.library.MessageLibrary;
+import com.glis.io.network.networktype.*;
 import com.glis.message.AccessTokenMessage;
 import com.glis.message.Message;
 import com.glis.message.PlaybackMessage;
+import io.netty.channel.ChannelHandlerContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,19 +33,24 @@ public class NetworkConfiguration {
         return new MappedMessageLibrary(messages);
     }
 
-
     @Bean
-    public Upstream upstream() {
-        return new Upstream();
+    public Upstream upstream(final DomainController domainController) {
+        return new ClientUpstream(new ClientHandlerCustomNetworkTypeHandler(domainController));
     }
 
     @Bean
-    public Downstream downstream(final MessageLibrary messageLibrary) {
-        return new Downstream(messageLibrary);
+    public Downstream downstream(final DomainController domainController, final MessageLibrary messageLibrary) {
+        return new ClientDownStream(new ClientHandlerCustomNetworkTypeHandler(domainController) {
+            @Override
+            public void doCustom(ChannelHandlerContext channelHandlerContext, LinkData linkData) {
+                super.doCustom(channelHandlerContext, linkData);
+                channelHandlerContext.pipeline().addLast(new SubscribeMessageEncoder());
+            }
+        }, messageLibrary);
     }
 
     @Bean
     public Both both(final Upstream upstream, final Downstream downstream) {
-        return new Both(upstream, downstream);
+        return new ClientBoth(upstream, downstream);
     }
 }

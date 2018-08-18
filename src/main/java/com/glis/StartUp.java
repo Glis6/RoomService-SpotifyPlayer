@@ -9,6 +9,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.util.Objects;
+
 /**
  * @author Glis
  */
@@ -33,7 +35,7 @@ public class StartUp {
             bootstrap.handler(new ClientNetworkPipeline());
 
             // Start the client.
-            ChannelFuture f = bootstrap.connect("localhost", 12345).sync(); // (5)
+            ChannelFuture f = bootstrap.connect(Objects.requireNonNull(Dotenv.load().get("host")), Integer.parseInt(Objects.requireNonNull(Dotenv.load().get("port")))).sync(); // (5)
 
             // Wait until the connection is closed.
             f.channel().closeFuture().sync();
