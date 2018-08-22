@@ -32,8 +32,8 @@ public class DomainController {
      */
     private final SpotifyApi spotifyApi = SpotifyApi
             .builder()
-            .setClientId(Dotenv.load().get("clientId"))
-            .setClientSecret(Dotenv.load().get("clientSecret"))
+            .setClientId(Dotenv.load().get("spotify.clientId"))
+            .setClientSecret(Dotenv.load().get("spotify.clientSecret"))
             .build();
 
     /**

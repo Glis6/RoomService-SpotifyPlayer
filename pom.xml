@@ -6,7 +6,7 @@
 
     <groupId>RoomService</groupId>
     <artifactId>SpotifyPlayer</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <kotlin.version>1.2.51</kotlin.version>
@@ -15,12 +15,25 @@
         <gson.version>2.8.5</gson.version>
         <spotify-web-api-java.version>2.0.4</spotify-web-api-java.version>
         <spring.version>5.0.8.RELEASE</spring.version>
-        <network-core.version>1.0.2</network-core.version>
+        <network-core.version>1.1.0</network-core.version>
         <java-dotenv.version>3.0.0</java-dotenv.version>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.glis.StartUp</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -132,6 +145,11 @@
             <version>${network-core.version}</version>
         </dependency>
         <dependency>
+            <groupId>RoomService</groupId>
+            <artifactId>NetworkCore-Client</artifactId>
+            <version>${network-core.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
             <version>${java-dotenv.version}</version>
@@ -146,6 +164,14 @@
         <repository>
             <id>RoomService-NetworkCore-mvn-repo</id>
             <url>https://raw.github.com/Glis6/RoomService-NetworkCore/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>RoomService-NetworkCore-Client-mvn-repo</id>
+            <url>https://raw.github.com/Glis6/RoomService-NetworkCore-Client/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>

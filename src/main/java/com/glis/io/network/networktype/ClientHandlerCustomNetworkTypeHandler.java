@@ -4,6 +4,7 @@ import com.glis.DomainController;
 import com.glis.io.network.ClientHandler;
 import com.glis.io.network.client.ClientAuthorizationHandler;
 import com.glis.io.network.codec.AuthorizationEncoder;
+import com.glis.io.network.codec.AuthorizationResponseDecoder;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 
@@ -34,6 +35,7 @@ public class ClientHandlerCustomNetworkTypeHandler implements CustomNetworkTypeH
         try {
             pipeline.remove(AuthorizationEncoder.class);
             pipeline.remove(ClientAuthorizationHandler.class);
+            pipeline.remove(AuthorizationResponseDecoder.class);
         } catch (NoSuchElementException ignored) {}
         pipeline.addLast(new ClientHandler(domainController));
     }
