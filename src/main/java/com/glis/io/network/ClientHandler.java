@@ -1,15 +1,9 @@
 package com.glis.io.network;
 
 import com.glis.DomainController;
-import com.glis.message.Message;
-import com.glis.message.SubscribeMessage;
-import io.github.cdimascio.dotenv.Dotenv;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,22 +26,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
      */
     public ClientHandler(DomainController domainController) {
         this.domainController = domainController;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        final Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                final String[] subscriptions = Objects.requireNonNull(Dotenv.load().get("subscriptions")).split(";");
-                final Message message = new SubscribeMessage(subscriptions);
-                ctx.pipeline().writeAndFlush(message);
-            }
-        }, 2000);
     }
 
     /**
