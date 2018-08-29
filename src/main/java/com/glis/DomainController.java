@@ -6,7 +6,6 @@ import com.glis.io.network.input.MetaData;
 import com.glis.io.network.input.dispatcher.InputDispatcher;
 import com.google.gson.JsonArray;
 import com.wrapper.spotify.SpotifyApi;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +31,8 @@ public class DomainController {
      */
     private final SpotifyApi spotifyApi = SpotifyApi
             .builder()
-            .setClientId(Dotenv.load().get("spotify.clientId"))
-            .setClientSecret(Dotenv.load().get("spotify.clientSecret"))
+            .setClientId(System.getenv("SPOTIFY_CLIENTID"))
+            .setClientSecret(System.getenv("SPOTIFY_CLIENTSECRET"))
             .build();
 
     /**

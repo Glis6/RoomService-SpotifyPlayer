@@ -1,9 +1,8 @@
 package com.glis;
 
 import com.glis.io.network.client.ServerConnection;
-import io.github.cdimascio.dotenv.Dotenv;
 
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Glis
@@ -13,17 +12,12 @@ public class StartUp {
      * The starting point of the application.
      */
     public static void main(String[] args) throws Exception {
-        Dotenv.configure()
-                .directory(".env")
-                .ignoreIfMalformed()
-                .ignoreIfMissing()
-                .load();
-
-        try(ServerConnection serverConnection = new ServerConnection(
-                Objects.requireNonNull(Dotenv.load().get("host")),
-                Integer.parseInt(Objects.requireNonNull(Dotenv.load().get("port"))),
-                Objects.requireNonNull(Dotenv.load().get("spotifyPlayer.clientId")),
-                Objects.requireNonNull(Dotenv.load().get("spotifyPlayer.clientSecret")))) {
+        try (ServerConnection serverConnection = new ServerConnection(
+                Optional.ofNullable(System.getenv("HOST")).orElseThrow(() -> new Exception("HOST is not set in the environment")),
+                Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElseThrow(() -> new Exception("PORT is not set in the environment"))),
+                Optional.ofNullable(System.getenv("LEDCONTROLLER_CLIENTID")).orElseThrow(() -> new Exception("LEDCONTROLLER_CLIENTID is not set in the environment")),
+                Optional.ofNullable(System.getenv("LEDCONTROLLER_CLIENTSECRET")).orElseThrow(() -> new Exception("LEDCONTROLLER_CLIENTSECRET is not set in the environment"))
+        )) {
             serverConnection.connect();
         }
     }
