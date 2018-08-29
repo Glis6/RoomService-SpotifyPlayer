@@ -8,6 +8,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,19 +39,34 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        final String[] subscriptions = Objects.requireNonNull(Dotenv.load().get("subscriptions")).split(";");
-        final Message message = new SubscribeMessage(subscriptions);
-        ctx.pipeline().writeAndFlush(message);
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                final String[] subscriptions = Objects.requireNonNull(Dotenv.load().get("subscriptions")).split(";");
+                final Message message = new SubscribeMessage(subscriptions);
+                ctx.pipeline().writeAndFlush(message);
+            }
+        }, 2000);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         domainController.handleInput(msg, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
-        logger.log(Level.INFO, "Closed channel.", cause);
+        //We ignore the closing message.
+        if(!cause.getMessage().equals("An existing connection was forcibly closed by the remote host")) {
+            logger.log(Level.WARNING, "An exception occurred on the channel. Closing channel.", cause);
+        }
     }
 }
