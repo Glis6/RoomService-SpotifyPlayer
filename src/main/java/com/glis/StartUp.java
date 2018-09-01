@@ -14,6 +14,7 @@ public class StartUp {
      */
     public static void main(String[] args) throws Exception {
 
+        //Needs to be preloaded for some unknown reason.
         ApplicationContextProvider.getApplicationContext().getBean(ClientDownStream.class);
 
         try (ServerConnection serverConnection = new ServerConnection(

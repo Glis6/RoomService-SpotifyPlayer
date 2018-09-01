@@ -95,4 +95,12 @@ public class DomainController {
         //If nothing then we send an exception.
         throw new InvalidSongException("The song doesn't fit any format.");
     }
+
+    /**
+     * Stops the playback of the current song.
+     */
+    public void stopPlayback() {
+        spotifyApi.pauseUsersPlayback();
+        logger.info("Stopped user playback.");
+    }
 }
