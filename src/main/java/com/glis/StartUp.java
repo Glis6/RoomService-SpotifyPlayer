@@ -1,7 +1,6 @@
 package com.glis;
 
 import com.glis.io.network.client.ServerConnection;
-import com.glis.io.network.client.networktype.ClientDownStream;
 
 import java.util.Optional;
 
@@ -13,10 +12,6 @@ public class StartUp {
      * The starting point of the application.
      */
     public static void main(String[] args) throws Exception {
-
-        //Needs to be preloaded for some unknown reason.
-        ApplicationContextProvider.getApplicationContext().getBean(ClientDownStream.class);
-
         try (ServerConnection serverConnection = new ServerConnection(
                 Optional.ofNullable(System.getenv("HOST")).orElseThrow(() -> new Exception("HOST is not set in the environment")),
                 Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElseThrow(() -> new Exception("PORT is not set in the environment"))),

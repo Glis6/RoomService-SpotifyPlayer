@@ -4,6 +4,7 @@ import com.glis.DomainController;
 import com.glis.io.network.input.handlers.AccessTokenInputHandler;
 import com.glis.io.network.input.handlers.InputHandler;
 import com.glis.io.network.input.handlers.PlaybackInputHandler;
+import com.glis.io.network.input.handlers.StopPlaybackHandler;
 import com.glis.util.HandlerLibrary;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,8 @@ public class InputHandlerConfiguration {
     public SmartInitializingSingleton registerInputHandlers(final HandlerLibrary<InputHandler, Object> handlerLibrary, final DomainController domainController) {
         return () -> handlerLibrary.registerHandlers(new InputHandler[]{
                 new PlaybackInputHandler(domainController),
-                new AccessTokenInputHandler(domainController)
+                new AccessTokenInputHandler(domainController),
+                new StopPlaybackHandler(domainController)
         });
     }
 }
