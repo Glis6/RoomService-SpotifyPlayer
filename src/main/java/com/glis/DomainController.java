@@ -99,8 +99,8 @@ public class DomainController {
     /**
      * Stops the playback of the current song.
      */
-    public void stopPlayback() {
-        spotifyApi.pauseUsersPlayback();
+    public void stopPlayback() throws Exception {
+        spotifyApi.pauseUsersPlayback().build().execute();
         logger.info("Stopped user playback.");
     }
 }

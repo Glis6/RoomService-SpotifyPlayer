@@ -9,6 +9,7 @@ import com.glis.io.network.networktype.Downstream;
 import com.glis.message.AccessTokenMessage;
 import com.glis.message.Message;
 import com.glis.message.PlaybackMessage;
+import com.glis.message.StopPlaybackMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +22,8 @@ public class NetworkConfiguration {
     public Message[] networkMessages() {
         return new Message[]{
                 new PlaybackMessage(),
-                new AccessTokenMessage()
+                new AccessTokenMessage(),
+                new StopPlaybackMessage()
         };
     }
 
